@@ -109,12 +109,12 @@ describe('GitlabIssue', () => {
 			},
 			assignees: [],
 			author: { id: 1, name: '', username: '', state: '', avatar_url: '', web_url: '', locked: false },
-			closed_by: undefined,
+			closed_by: null,
 			confidential: false,
 			created_at: '',
 			discussion_locked: false,
 			downvotes: 0,
-			epic: undefined,
+			epic: null,
 			has_tasks: false,
 			iid: 1,
 			imported: false,
@@ -122,23 +122,23 @@ describe('GitlabIssue', () => {
 			issue_type: '',
 			labels: [],
 			merge_requests_count: 0,
-			milestone: undefined,
+			milestone: null,
 			project_id: 1,
 			severity: '',
 			state: '',
 			task_completion_status: { count: 0, completed_count: 0 },
 			task_status: '',
-			time_stats: { time_estimate: 0, total_time_spent: 0, human_time_spent: undefined, human_total_time_spent: undefined },
+			time_stats: { time_estimate: 0, total_time_spent: 0, human_time_spent: null, human_total_time_spent: null },
 			updated_at: '',
 			upvotes: 0,
 			user_notes_count: 0
 		};
 
 		const gitlabIssue = new GitlabIssue(minimalIssue);
-		expect(gitlabIssue.epic).toBeUndefined();
-		expect(gitlabIssue.milestone).toBeUndefined();
-		expect(gitlabIssue.closed_by).toBeUndefined();
-		expect(gitlabIssue.time_stats.human_time_spent).toBeUndefined();
+		expect(gitlabIssue.epic).toBeNull();
+		expect(gitlabIssue.milestone).toBeNull();
+		expect(gitlabIssue.closed_by).toBeNull();
+		expect(gitlabIssue.time_stats.human_time_spent).toBeNull();
 	});
 
 	it('should handle complex references object', () => {
@@ -201,7 +201,7 @@ describe('GitlabIssue', () => {
 			time_estimate: 3600,
 			total_time_spent: 1800,
 			human_time_spent: '30m',
-			human_total_time_spent: undefined
+			human_total_time_spent: null
 		};
 
 		const gitlabIssue = new GitlabIssue(issueWithPartialStats);

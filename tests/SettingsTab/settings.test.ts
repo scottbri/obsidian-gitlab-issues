@@ -103,9 +103,43 @@ describe('settings', () => {
 		expect(settings.title).toBe('GitLab Issues Configuration');
 	});
 
+	it('should have the correct setting inputs', () => {
+		const expectedSettingInputs = [
+			{
+				title: 'Gitlab instance URL',
+				description: 'Use your own Gitlab instance instead of the public hosted Gitlab.',
+				placeholder: 'https://gitlab.com',
+				value: 'gitlabUrl',
+			},
+			{
+				title: 'Personal Access Token',
+				description: 'Create a personal access token in your Gitlab account and enter it here.',
+				placeholder: 'Token',
+				value: 'gitlabToken',
+			},
+			{
+				title: 'Template File',
+				description: 'Path to an Obsidian note to use as the template.',
+				placeholder: 'your-template-file.md',
+				value: 'templateFile',
+			},
+			{
+				title: 'Output Folder',
+				description: 'Path to an Obsidian folder to write output files to.',
+				placeholder: 'Gitlab Issues',
+				value: 'outputDir',
+				modifier: 'normalizePath',
+			},
+			{
+				title: 'Issues Filter',
+				description: 'The query string used to filter the issues.',
+				placeholder: 'due_date=month',
+				value: 'filter',
+			},
+		];
 
 		const allInputs = settings.settingInputs;
-		expect(allInputs).toHaveLength(5); // Verify total number of inputs
+		expect(allInputs).toHaveLength(8); // Verify total number of inputs
 		expect(allInputs[0]).toEqual(expectedSettingInputs[0]);
 		expect(allInputs[1]).toEqual(expectedSettingInputs[1]);
 		expect(allInputs[2]).toEqual(expectedSettingInputs[2]);
@@ -120,6 +154,22 @@ describe('settings', () => {
 		expect(filterSetting.description).toBe('The query string used to filter the issues.');
 		expect(filterSetting.placeholder).toBe('due_date=month');
 		expect(filterSetting.value).toBe('filter');
+
+		// Test show icon setting
+		const showIconSetting = allInputs[5];
+		expect(showIconSetting.title).toBe('Show Gitlab Icon');
+		expect(showIconSetting.value).toBe('showIcon');
+
+		// Test purge issues setting
+		const purgeSetting = allInputs[6];
+		expect(purgeSetting.title).toBe('Purge Issues');
+		expect(purgeSetting.value).toBe('purgeIssues');
+
+		// Test refresh interval setting
+		const refreshSetting = allInputs[7];
+		expect(refreshSetting.title).toBe('Auto Refresh Interval');
+		expect(refreshSetting.description).toContain('minutes');
+		expect(refreshSetting.value).toBe('intervalOfRefresh');
 	});
 
 	it('should properly handle dropdown option changes', () => {
