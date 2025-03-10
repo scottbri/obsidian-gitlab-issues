@@ -25,8 +25,8 @@ export interface References {
 export interface TimeStats {
 	readonly time_estimate: number;
 	readonly total_time_spent: number;
-	readonly human_time_spent: number;
-	readonly human_total_time_spent: number;
+	readonly human_time_spent?: number | string;
+	readonly human_total_time_spent?: number | string;
 }
 
 export interface ShortIssue {
@@ -47,8 +47,8 @@ export interface Issue extends ShortIssue {
 
 	readonly assignees: Assignee[];
 	readonly author: Assignee;
-	readonly closed_by: Assignee;
-	readonly epic: Epic;
+	readonly closed_by?: Assignee;
+	readonly epic?: Epic;
 	readonly labels: string[];
 	readonly upvotes: number;
 	readonly downvotes: number;
@@ -74,7 +74,7 @@ export interface Issue extends ShortIssue {
 		count: number,
 		completed_count: number
 	}
-	readonly milestone: ShortIssue
+	readonly milestone?: ShortIssue
 }
 
 export interface ObsidianIssue extends Issue {

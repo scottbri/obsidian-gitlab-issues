@@ -109,12 +109,12 @@ describe('GitlabIssue', () => {
 			},
 			assignees: [],
 			author: { id: 1, name: '', username: '', state: '', avatar_url: '', web_url: '', locked: false },
-			closed_by: null,
+			closed_by: undefined,
 			confidential: false,
 			created_at: '',
 			discussion_locked: false,
 			downvotes: 0,
-			epic: null,
+			epic: undefined,
 			has_tasks: false,
 			iid: 1,
 			imported: false,
@@ -122,23 +122,23 @@ describe('GitlabIssue', () => {
 			issue_type: '',
 			labels: [],
 			merge_requests_count: 0,
-			milestone: null,
+			milestone: undefined,
 			project_id: 1,
 			severity: '',
 			state: '',
 			task_completion_status: { count: 0, completed_count: 0 },
 			task_status: '',
-			time_stats: { time_estimate: 0, total_time_spent: 0, human_time_spent: null, human_total_time_spent: null },
+			time_stats: { time_estimate: 0, total_time_spent: 0, human_time_spent: undefined, human_total_time_spent: undefined },
 			updated_at: '',
 			upvotes: 0,
 			user_notes_count: 0
 		};
 
 		const gitlabIssue = new GitlabIssue(minimalIssue);
-		expect(gitlabIssue.epic).toBeNull();
-		expect(gitlabIssue.milestone).toBeNull();
-		expect(gitlabIssue.closed_by).toBeNull();
-		expect(gitlabIssue.time_stats.human_time_spent).toBeNull();
+		expect(gitlabIssue.epic).toBeUndefined();
+		expect(gitlabIssue.milestone).toBeUndefined();
+		expect(gitlabIssue.closed_by).toBeUndefined();
+		expect(gitlabIssue.time_stats.human_time_spent).toBeUndefined();
 	});
 
 	it('should handle complex references object', () => {
@@ -201,14 +201,14 @@ describe('GitlabIssue', () => {
 			time_estimate: 3600,
 			total_time_spent: 1800,
 			human_time_spent: '30m',
-			human_total_time_spent: null
+			human_total_time_spent: undefined
 		};
 
 		const gitlabIssue = new GitlabIssue(issueWithPartialStats);
 		expect(gitlabIssue.time_stats.time_estimate).toBe(3600);
 		expect(gitlabIssue.time_stats.total_time_spent).toBe(1800);
 		expect(gitlabIssue.time_stats.human_time_spent).toBe('30m');
-		expect(gitlabIssue.time_stats.human_total_time_spent).toBeNull();
+		expect(gitlabIssue.time_stats.human_total_time_spent).toBeUndefined();
 	});
 
 	it('should handle confidential issues', () => {
