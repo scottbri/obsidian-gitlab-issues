@@ -139,7 +139,7 @@ describe('settings', () => {
 		];
 
 		const allInputs = settings.settingInputs;
-		expect(allInputs).toHaveLength(8); // Verify total number of inputs
+		expect(allInputs).toHaveLength(5); // Verify total number of inputs
 		expect(allInputs[0]).toEqual(expectedSettingInputs[0]);
 		expect(allInputs[1]).toEqual(expectedSettingInputs[1]);
 		expect(allInputs[2]).toEqual(expectedSettingInputs[2]);
