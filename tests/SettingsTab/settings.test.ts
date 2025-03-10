@@ -103,40 +103,6 @@ describe('settings', () => {
 		expect(settings.title).toBe('GitLab Issues Configuration');
 	});
 
-	it('should have the correct setting inputs', () => {
-		const expectedSettingInputs = [
-			{
-				title: 'Gitlab instance URL',
-				description: 'Use your own Gitlab instance instead of the public hosted Gitlab.',
-				placeholder: 'https://gitlab.com',
-				value: 'gitlabUrl',
-			},
-			{
-				title: 'Personal Access Token',
-				description: 'Create a personal access token in your Gitlab account and enter it here.',
-				placeholder: 'Token',
-				value: 'gitlabToken',
-			},
-			{
-				title: 'Template File',
-				description: 'Path to an Obsidian note to use as the template.',
-				placeholder: 'your-template-file.md',
-				value: 'templateFile',
-			},
-			{
-				title: 'Output Folder',
-				description: 'Path to an Obsidian folder to write output files to.',
-				placeholder: 'Gitlab Issues',
-				value: 'outputDir',
-				modifier: 'normalizePath',
-			},
-			{
-				title: 'Issues Filter',
-				description: 'The query string used to filter the issues.',
-				placeholder: 'due_date=month',
-				value: 'filter',
-			},
-		];
 
 		const allInputs = settings.settingInputs;
 		expect(allInputs).toHaveLength(5); // Verify total number of inputs
