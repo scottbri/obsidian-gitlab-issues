@@ -13,7 +13,12 @@ export const DEFAULT_SETTINGS: GitlabIssuesSettings = {
 	refreshOnStartup: true,
 	intervalOfRefresh: "15",
 	gitlabApiUrl(): string {
-		return `${this.gitlabUrl}/api/v4`;
+		let baseUrl = this.gitlabUrl;
+		if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
+			baseUrl = 'https://' + baseUrl;
+		}
+		baseUrl = baseUrl.replace(/\/+$/, '');
+		return `${baseUrl}/api/v4`;
 	}
 };
 
