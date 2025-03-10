@@ -91,4 +91,160 @@ describe('GitlabIssue', () => {
 		expect(gitlabIssue.filename).toEqual(`sanitized-Test`);
 		expect(mockSanitizeFileName).toHaveBeenCalledWith(mockIssue.title);
 	});
+
+	it('should handle missing optional properties', () => {
+		const minimalIssue: Issue = {
+			id: 1,
+			title: 'Minimal Issue',
+			description: '',
+			due_date: '',
+			web_url: '',
+			references: '',
+			_links: {
+				self: '',
+				notes: '',
+				award_emoji: '',
+				project: '',
+				closed_as_duplicate_of: ''
+			},
+			assignees: [],
+			author: { id: 1, name: '', username: '', state: '', avatar_url: '', web_url: '', locked: false },
+			closed_by: null,
+			confidential: false,
+			created_at: '',
+			discussion_locked: false,
+			downvotes: 0,
+			epic: null,
+			has_tasks: false,
+			iid: 1,
+			imported: false,
+			imported_from: '',
+			issue_type: '',
+			labels: [],
+			merge_requests_count: 0,
+			milestone: null,
+			project_id: 1,
+			severity: '',
+			state: '',
+			task_completion_status: { count: 0, completed_count: 0 },
+			task_status: '',
+			time_stats: { time_estimate: 0, total_time_spent: 0, human_time_spent: null, human_total_time_spent: null },
+			updated_at: '',
+			upvotes: 0,
+			user_notes_count: 0
+		};
+
+		const gitlabIssue = new GitlabIssue(minimalIssue);
+		expect(gitlabIssue.epic).toBeNull();
+		expect(gitlabIssue.milestone).toBeNull();
+		expect(gitlabIssue.closed_by).toBeNull();
+		expect(gitlabIssue.time_stats.human_time_spent).toBeNull();
+	});
+
+	it('should handle complex references object', () => {
+		const issueWithComplexRefs = {...mockIssue};
+		issueWithComplexRefs.references = {
+			short: '#1',
+			relative: 'group/project#1',
+			full: 'group/project!1'
+		};
+
+		const gitlabIssue = new GitlabIssue(issueWithComplexRefs);
+		expect(gitlabIssue.references).toEqual({
+			short: '#1',
+			relative: 'group/project#1',
+			full: 'group/project!1'
+		});
+	});
+
+	it('should handle arrays of labels correctly', () => {
+		const issueWithLabels = {...mockIssue};
+		issueWithLabels.labels = ['bug', 'critical', 'needs-review'];
+
+		const gitlabIssue = new GitlabIssue(issueWithLabels);
+		expect(gitlabIssue.labels).toHaveLength(3);
+		expect(gitlabIssue.labels).toContain('bug');
+		expect(gitlabIssue.labels).toContain('critical');
+		expect(gitlabIssue.labels).toContain('needs-review');
+	});
+
+	it('should handle task completion status correctly', () => {
+		const issueWithTasks = {...mockIssue};
+		issueWithTasks.has_tasks = true;
+		issueWithTasks.task_completion_status = {
+			count: 5,
+			completed_count: 3
+		};
+
+		const gitlabIssue = new GitlabIssue(issueWithTasks);
+		expect(gitlabIssue.has_tasks).toBeTruthy();
+		expect(gitlabIssue.task_completion_status.count).toBe(5);
+		expect(gitlabIssue.task_completion_status.completed_count).toBe(3);
+	});
+
+	it('should handle multiple assignees', () => {
+		const issueWithAssignees = {...mockIssue};
+		issueWithAssignees.assignees = [
+			{ id: 1, name: 'First Dev', username: 'dev1', state: 'active', avatar_url: '', web_url: '', locked: false },
+			{ id: 2, name: 'Second Dev', username: 'dev2', state: 'active', avatar_url: '', web_url: '', locked: false }
+		];
+
+		const gitlabIssue = new GitlabIssue(issueWithAssignees);
+		expect(gitlabIssue.assignees).toHaveLength(2);
+		expect(gitlabIssue.assignees[0].name).toBe('First Dev');
+		expect(gitlabIssue.assignees[1].username).toBe('dev2');
+	});
+
+	it('should handle partial time stats data', () => {
+		const issueWithPartialStats = {...mockIssue};
+		issueWithPartialStats.time_stats = {
+			time_estimate: 3600,
+			total_time_spent: 1800,
+			human_time_spent: '30m',
+			human_total_time_spent: null
+		};
+
+		const gitlabIssue = new GitlabIssue(issueWithPartialStats);
+		expect(gitlabIssue.time_stats.time_estimate).toBe(3600);
+		expect(gitlabIssue.time_stats.total_time_spent).toBe(1800);
+		expect(gitlabIssue.time_stats.human_time_spent).toBe('30m');
+		expect(gitlabIssue.time_stats.human_total_time_spent).toBeNull();
+	});
+
+	it('should handle confidential issues', () => {
+		const confidentialIssue = {...mockIssue, confidential: true};
+		const gitlabIssue = new GitlabIssue(confidentialIssue);
+		expect(gitlabIssue.confidential).toBeTruthy();
+	});
+
+	it('should preserve author information', () => {
+		const issueWithDetailedAuthor = {...mockIssue};
+		issueWithDetailedAuthor.author = {
+			id: 123,
+			name: 'Test Author',
+			username: 'testauthor',
+			state: 'active',
+			avatar_url: 'https://gitlab.com/avatar.jpg',
+			web_url: 'https://gitlab.com/testauthor',
+			locked: false
+		};
+
+		const gitlabIssue = new GitlabIssue(issueWithDetailedAuthor);
+		expect(gitlabIssue.author.id).toBe(123);
+		expect(gitlabIssue.author.name).toBe('Test Author');
+		expect(gitlabIssue.author.username).toBe('testauthor');
+		expect(gitlabIssue.author.avatar_url).toBe('https://gitlab.com/avatar.jpg');
+		expect(gitlabIssue.author.web_url).toBe('https://gitlab.com/testauthor');
+		expect(gitlabIssue.author.locked).toBeFalsy();
+	});
+
+	it('should handle different issue states', () => {
+		const states = ['opened', 'closed', 'locked'];
+		
+		for (const state of states) {
+			const stateIssue = {...mockIssue, state};
+			const gitlabIssue = new GitlabIssue(stateIssue);
+			expect(gitlabIssue.state).toBe(state);
+		}
+	});
 });
