@@ -61,7 +61,62 @@ for more information on the syntax.
 
 Currently, the available fields include:
 
-`id` `title` `description` `due_date` `web_url` 
+### Basic Issue Information
+- `id` - The issue ID
+- `iid` - The internal issue ID
+- `title` - The issue title
+- `description` - The issue description
+- `due_date` - The due date of the issue
+- `web_url` - The URL to view the issue on GitLab
+- `state` - The current state of the issue (e.g., "opened", "closed")
+- `created_at` - When the issue was created
+- `updated_at` - When the issue was last updated
+- `project_id` - The ID of the project the issue belongs to
+- `issue_type` - The type of the issue
+- `severity` - The severity of the issue
+- `confidential` - Whether the issue is confidential
+- `discussion_locked` - Whether discussion is locked on the issue
+- `upvotes` - Number of upvotes
+- `downvotes` - Number of downvotes
+- `merge_requests_count` - Number of related merge requests
+- `user_notes_count` - Number of user notes/comments
+- `imported` - Whether the issue was imported
+- `imported_from` - Where the issue was imported from
+- `has_tasks` - Whether the issue has tasks
+- `task_status` - The status of tasks in the issue
+- `labels` - The labels applied to the issue (raw array)
+- `labelsToTags labels` - Helper that converts GitLab labels to Obsidian tags (adds # prefix and converts :: to /)
+
+### References
+- `references.short` - Short reference
+- `references.relative` - Relative reference
+- `references.full` - Full reference
+
+### People
+- `assignees` - Array of assignees (each with `avatar_url`, `id`, `locked`, `name`, `state`, `username`, `web_url`)
+- `author` - The author of the issue (with `avatar_url`, `id`, `locked`, `name`, `state`, `username`, `web_url`)
+- `closed_by` - Who closed the issue (with `avatar_url`, `id`, `locked`, `name`, `state`, `username`, `web_url`)
+
+### Task Status
+- `task_completion_status.count` - Total number of tasks
+- `task_completion_status.completed_count` - Number of completed tasks
+
+### Time Tracking
+- `time_stats.time_estimate` - Estimated time
+- `time_stats.total_time_spent` - Total time spent
+- `time_stats.human_time_spent` - Human-readable time spent
+- `time_stats.human_total_time_spent` - Human-readable total time spent
+
+### Related Items
+- `epic` - Related epic (with `id`, `iid`, `title`, `url`, `group_id`)
+- `milestone` - Related milestone (with same fields as a basic issue)
+
+### Links
+- `_links.self` - Link to the issue
+- `_links.notes` - Link to the issue notes
+- `_links.award_emoji` - Link to the issue award emoji
+- `_links.project` - Link to the project
+- `_links.closed_as_duplicate_of` - Link to the issue this was closed as a duplicate of
 
 ## Bugs
 

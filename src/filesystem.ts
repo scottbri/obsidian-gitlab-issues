@@ -1,8 +1,8 @@
 import {Vault, TFile, TAbstractFile, TFolder} from "obsidian";
-import { compile } from 'handlebars';
+import { compile, registerHelper, TemplateDelegate } from 'handlebars';
 import {ObsidianIssue} from "./GitlabLoader/issue-types";
 import {GitlabIssuesSettings} from "./SettingsTab/settings-types";
-import {DEFAULT_TEMPLATE, logger} from "./utils/utils";
+import {DEFAULT_TEMPLATE, logger, convertLabelsToTags} from "./utils/utils";
 
 export default class Filesystem {
 
@@ -13,11 +13,16 @@ export default class Filesystem {
 	constructor(vault: Vault, settings: GitlabIssuesSettings) {
 		this.vault = vault;
 		this.settings = settings;
+		
+		// Register Handlebars helpers
+		registerHelper('labelsToTags', function(labels: string | string[]) {
+			return convertLabelsToTags(labels);
+		});
 	}
 
 	public createOutputDirectory() {
 		this.vault.createFolder(this.settings.outputDir)
-			.catch((error) => {
+			.catch((error: Error) => {
 				if (error.message !== 'Folder already exists.') {
 					logger('Could not create output directory');
 				}
@@ -32,7 +37,7 @@ export default class Filesystem {
 			Vault.recurseChildren(outputDir, (existingFile: TAbstractFile) => {
 				if (existingFile instanceof TFile) {
 					this.vault.delete(existingFile)
-						.catch(error => logger(error.message));
+						.catch((error: Error) => logger(error.message));
 				}
 			});
 		}
@@ -46,7 +51,7 @@ export default class Filesystem {
 					(issue: ObsidianIssue) => this.writeFile(issue, compile(rawTemplate))
 				);
 			})
-			.catch((error) => {
+			.catch((error: Error) => {
 				issues.map(
 					(issue: ObsidianIssue) => this.writeFile(issue, compile(DEFAULT_TEMPLATE.toString()))
 				);
@@ -54,10 +59,10 @@ export default class Filesystem {
 		;
 	}
 
-	private writeFile(issue: ObsidianIssue, template: HandlebarsTemplateDelegate)
+	private writeFile(issue: ObsidianIssue, template: TemplateDelegate<ObsidianIssue>)
 	{
 		this.vault.create(this.buildFileName(issue), template(issue))
-			.catch((error) => logger(error.message))
+			.catch((error: Error) => logger(error.message))
 		;
 	}
 
